@@ -1,0 +1,3 @@
+administer commerce_dunning configuration:
+  title: 'Administer commerce_dunning configuration'
+  restrict access: true

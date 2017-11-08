@@ -1,0 +1,7 @@
+commerce_dunning.settings_form:
+  path: '/admin/config/system/commerce-dunning'
+  defaults:
+    _title: 'Commerce Dunning settings'
+    _form: 'Drupal\commerce_dunning\Form\SettingsForm'
+  requirements:
+    _permission: 'administer commerce_dunning configuration'
