@@ -3,6 +3,7 @@
 namespace Drupal\commerce_dunning\EventSubscriber;
 
 use Drupal\commerce_order\OrderTotalSummaryInterface;
+use Drupal\commerce_payment\Entity\Payment;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Mail\MailManagerInterface;
@@ -87,17 +88,25 @@ class CommerceDunningSubscriber implements EventSubscriberInterface {
   /**
    * Sends a payment declined email.
    *
-   * @param \Drupal\state_machine\Event\WorkflowTransitionEvent $event
+   * @param  $event
    *   The event we subscribed to.
    */
-  public function sendPaymentDeclined(WorkflowTransitionEvent $event) {
+  public function sendPaymentDeclined($event) {
+
+    //@todo this should come from the Event once that exists.
+    $payment = Payment::load(4);
+
     /** @var \Drupal\commerce_order\Entity\OrderInterface $order */
-    $order = $event->getEntity();
+    $order = $payment->getOrder();
+
     /** @var \Drupal\commerce_order\Entity\OrderTypeInterface $order_type */
     $order_type = $this->orderTypeStorage->load($order->bundle());
-    if (!$order_type->shouldSendPaymentDeclined()) {
-      return;
-    }
+
+    // @todo Implement this method if needed.
+//    if (!$order_type->shouldSendPaymentDeclined()) {
+//      return;
+//    }
+
     $to = $order->getEmail();
     if (!$to) {
       // The email should not be empty, unless the order is malformed.
@@ -120,6 +129,7 @@ class CommerceDunningSubscriber implements EventSubscriberInterface {
     $build = [
       '#theme' => 'commerce_dunning_payment_declined',
       '#order_entity' => $order,
+      '#payment_entity' => $payment,
       '#totals' => $this->orderTotalSummary->buildTotals($order),
     ];
     if ($billing_profile = $order->getBillingProfile()) {
