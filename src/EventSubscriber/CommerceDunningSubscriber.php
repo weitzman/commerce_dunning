@@ -10,7 +10,7 @@ use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\state_machine\Event\WorkflowTransitionEvent;
+use Drupal\Core\Url;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -130,6 +130,7 @@ class CommerceDunningSubscriber implements EventSubscriberInterface {
       '#theme' => 'commerce_dunning_payment_declined',
       '#order_entity' => $order,
       '#payment_entity' => $payment,
+      '#payment_method_link' => Url::fromRoute('entity.commerce_payment_method.collection', ['user' => $order->getCustomerId()]),
       '#totals' => $this->orderTotalSummary->buildTotals($order),
     ];
     if ($billing_profile = $order->getBillingProfile()) {

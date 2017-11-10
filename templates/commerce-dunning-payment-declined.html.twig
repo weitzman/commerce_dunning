@@ -6,6 +6,7 @@
  * Available variables:
  * - order_entity: The order entity.
  * - payment_entity: The payment entity.
+ * - payment_method_link: A link to the user's payment methods page.
  * - billing_information: The rendered billing information.
  * - shipping_information: The rendered shipping information.
  * - payment_method: The rendered payment method.
@@ -37,26 +38,24 @@
       <table style="text-align: center; min-width: 450px; margin: 5px auto 0 auto; border: 1px solid #cccccc; border-radius: 5px; padding: 40px 30px 30px 30px;">
         <tbody>
         <tr>
-          <td style="font-size: 30px; padding-bottom: 30px">{{ 'Payment declined'|t }}</td>
+          <td style="font-size: 30px; padding-bottom: 30px">{{ 'Payment failed.'|t }}</td>
         </tr>
         <tr>
           <td style="font-weight: bold; padding-top:15px; padding-bottom: 15px; text-align: left; border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc">
             {% if invoice.attempt_count == 1 %}
-              We regret to inform you that the most recent charge attempt on your card failed.
+              {{ 'We regret to inform you that the most recent charge attempt on your card failed. Please <a href="@href">update your payment method</a>.'|t({'@href': payment_method_link}) }}
 
-              Our next charge attempt will be on: {{invoice.next_retry}}
+              {{ 'Our next charge attempt will be on: @date'|t({'@date': invoice.next_retry}) }}
             {%  elseif invoice.attempt_count == 2  %}
-              Our attempts to charge your card has failed again.
+              {{  'Our attempt to charge your card has failed again. Please <a href="@href">update your payment method</a>.'|t({'@href': payment_method_link}) }}
 
-              We will try again on: {{invoice.next_retry}}
+              {{ 'Our next charge attempt will be on: @date'|t({'@date': invoice.next_retry}) }}
             {%  elseif invoice.attempt_count == 3  %}
-              This is to inform you that our last 3 attempts to charge your card has failed.
+              {{  'This is to inform you that our last 3 attempts to charge your card has failed. Please <a href="@href">update your payment method</a>.'|t({'@href': payment_method_link}) }}
 
-              Our final attempt to charge your card will be on: {{invoice.next_retry}}
-
-              If this fails, ***ACTION***
+              {{ 'Our final charge attempt will be on: @date'|t({'@date': invoice.next_retry}) }}
             {%  elseif invoice.attempt_count == 4  %}
-              We regret to inform you that our last attempt to charge your card has failed and your **ACTION***. To reactivate your subscription, please update your payment details and contact us.
+              {{  'We regret to inform you that our last attempt to charge your card has failed. Please <a href="@href">update your payment method</a>. and contact us'|t({'@href': payment_method_link}) }}
             {%  endif %}
           </td>
         </tr>
@@ -158,7 +157,7 @@
         <tr>
           <td>
             {% block additional_information %}
-              {{ 'Thank you for your order!'|t }}
+              {{ 'Thank you for your attention to this matter.'|t }}
             {% endblock %}
           </td>
         </tr>
